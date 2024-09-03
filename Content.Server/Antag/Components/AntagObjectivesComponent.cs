@@ -1,6 +1,7 @@
 using Content.Server.Antag;
 using Content.Shared.Objectives.Components;
 using Robust.Shared.Prototypes;
+// using Content.Server.Grimbly.AntagOptOut;
 
 namespace Content.Server.Antag.Components;
 

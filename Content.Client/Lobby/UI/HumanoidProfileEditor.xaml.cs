@@ -708,8 +708,8 @@ namespace Content.Client.Lobby.UI
                 selector.OnOpenGuidebook += OnOpenGuidebook;
 
                 var title = Loc.GetString(antagOptOut.Name);
-                var description = Loc.GetString(antagOptOut.Objective);
-                selector.Setup(items, title, 250, description, guides: antagOptOut.Guides);
+                var description = Loc.GetString(antagOptOut.Description);
+                selector.Setup(items, title, 250, description);
                 selector.Select(Profile?.AntagOptOutPreferences.Contains(antagOptOut.ID) == true ? 0 : 1);
 
                 var requirements = _entManager.System<SharedRoleSystem>().GetAntagOptOutRequirement(antagOptOut);

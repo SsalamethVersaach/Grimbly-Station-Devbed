@@ -1,0 +1,30 @@
+- type: antagOptOut
+  id: optKill
+  name: Kill (Non Round Removal)
+  description: Opt in for Dying (Non Round Removal by Traitors)
+  antagonistTarget: 1
+  setPreference: true
+
+- type: antagOptOut
+  id: optRR
+  name: Round Removal
+  description: Opt In For Round Removal (Traitors)
+  antagonistTarget: 0
+  setPreference: true
+
+- type: antagOptOut
+  id: optMean
+  name: Teach You A Lesson
+  description: You seem to have mildly irritated the Syndicate! (Opt In For Thief Target/Annoyance)
+  antagonistTarget: 2
+  setPreference: true
+
+- type: antagOptOut
+  id: optNone
+  name: None
+  description: Opt Out For All (Traitor) Antag Targeting
+  antagonistTarget: 3
+  setPreference: true
+
+
+

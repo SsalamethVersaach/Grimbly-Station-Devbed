@@ -158,6 +158,26 @@ namespace Content.Server.Database.Migrations.Sqlite
                 });
 
             migrationBuilder.CreateTable(
+                name: "antagOptOut",
+                columns: table => new
+                {
+                    antag_opt_out_id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    profile_id = table.Column<int>(nullable: false),
+                    antag_opt_out_name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_antag_opt_out", x => x.antag_opt_out_id);
+                    table.ForeignKey(
+                        name: "FK_antag_opt_out_profile_profile_id",
+                        column: x => x.profile_id,
+                        principalTable: "profile",
+                        principalColumn: "profile_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "job",
                 columns: table => new
                 {
@@ -182,6 +202,12 @@ namespace Content.Server.Database.Migrations.Sqlite
                 name: "IX_antag_profile_id_antag_name",
                 table: "antag",
                 columns: new[] { "profile_id", "antag_name" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_antag_opt_out_profile_id_antag_opt_out_name",
+                table: "antag_opt_out",
+                columns: new[] { "profile_id", "antag_opt_out_name" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -229,6 +255,9 @@ namespace Content.Server.Database.Migrations.Sqlite
         {
             migrationBuilder.DropTable(
                 name: "antag");
+
+            migrationBuilder.DropTable(
+                name: "antag_opt_out");
 
             migrationBuilder.DropTable(
                 name: "assigned_user_id");
