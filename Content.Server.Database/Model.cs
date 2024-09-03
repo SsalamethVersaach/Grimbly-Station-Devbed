@@ -8,7 +8,6 @@ using System.Text.Json;
 using Content.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
-
 namespace Content.Server.Database
 {
     public abstract class ServerDbContext : DbContext
@@ -56,6 +55,10 @@ namespace Content.Server.Database
 
             modelBuilder.Entity<Antag>()
                 .HasIndex(p => new {HumanoidProfileId = p.ProfileId, p.AntagName})
+                .IsUnique();
+
+            modelBuilder.Entity<antagOptOut>()
+                .HasIndex(p => new {HumanoidProfileId = p.ProfileId, p.antagOptOutName})
                 .IsUnique();
 
             modelBuilder.Entity<Trait>()
@@ -371,6 +374,7 @@ namespace Content.Server.Database
         public int SpawnPriority { get; set; } = 0;
         public List<Job> Jobs { get; } = new();
         public List<Antag> Antags { get; } = new();
+        public List<antagOptOut> antagOptOut { get; } = new();
         public List<Trait> Traits { get; } = new();
 
         public List<ProfileRoleLoadout> Loadouts { get; } = new();
@@ -408,6 +412,16 @@ namespace Content.Server.Database
 
         public string AntagName { get; set; } = null!;
     }
+
+    public class antagOptOut
+    {
+        public int Id { get; set; }
+        public Profile Profile { get; set; } = null!;
+        public int ProfileId { get; set; }
+
+        public string antagOptOutName { get; set; } = null!;
+    }
+
 
     public class Trait
     {

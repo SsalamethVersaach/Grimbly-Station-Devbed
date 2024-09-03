@@ -455,6 +455,31 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.ToTable("antag", (string)null);
                 });
 
+             modelBuilder.Entity("Content.Server.Database.AntagOptOut", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("antag_opt_out_id");
+
+                    b.Property<string>("AntagOptOutName")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("antag_opt_out_name");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("profile_id");
+
+                    b.HasKey("Id")
+                        .HasName("PK_antagOptOut");
+
+                    b.HasIndex("ProfileId", "AntagOptOutName")
+                        .IsUnique();
+
+                    b.ToTable("antagOptOut", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.AssignedUserId", b =>
                 {
                     b.Property<int>("Id")
@@ -1550,6 +1575,18 @@ namespace Content.Server.Database.Migrations.Sqlite
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("Content.Server.Database.AntagOptOut", b =>
+                {
+                    b.HasOne("Content.Server.Database.Profile", "Profile")
+                        .WithMany("AntagOptOut")
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_antag_opt_out_profile_profile_id");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("Content.Server.Database.ConnectionLog", b =>
                 {
                     b.HasOne("Content.Server.Database.Server", "Server")
@@ -1846,6 +1883,8 @@ namespace Content.Server.Database.Migrations.Sqlite
             modelBuilder.Entity("Content.Server.Database.Profile", b =>
                 {
                     b.Navigation("Antags");
+
+                    b.Navigation("AntagOptOut");
 
                     b.Navigation("Jobs");
 

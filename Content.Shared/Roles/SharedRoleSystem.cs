@@ -9,6 +9,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Grimbly.Roles;
 
 namespace Content.Shared.Roles;
 
@@ -303,5 +304,21 @@ public abstract partial class SharedRoleSystem : EntitySystem // DeltaV - make i
             return req;
 
         return antag.Requirements;
+    }
+
+    public HashSet<JobRequirement>? GetAntagOptOutRequirement(ProtoId<AntagOptOutPrototype> antagOptOut)
+    {
+        if (_requirementOverride != null && _requirementOverride.AntagsOptOut.TryGetValue(antagOptOut, out var req))
+            return req;
+
+        return _prototypes.Index(antagOptOut).Requirements;
+    }
+
+    public HashSet<JobRequirement>? GetAntagOptOutRequirement(AntagOptOutPrototype antagOptOut)
+    {
+        if (_requirementOverride != null && _requirementOverride.AntagsOptOut.TryGetValue(antagOptOut.ID, out var req))
+            return req;
+
+        return antagOptOut.Requirements;
     }
 }

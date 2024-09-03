@@ -21,6 +21,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Grimbly.Roles;
 
 namespace Content.Server.Database
 {
@@ -47,6 +48,7 @@ namespace Content.Server.Database
                 .Preference
                 .Include(p => p.Profiles).ThenInclude(h => h.Jobs)
                 .Include(p => p.Profiles).ThenInclude(h => h.Antags)
+                .Include(p => p.Profiles).ThenInclude(h => h.antagOptOut)
                 .Include(p => p.Profiles).ThenInclude(h => h.Traits)
                 .Include(p => p.Profiles)
                     .ThenInclude(h => h.Loadouts)
@@ -99,6 +101,7 @@ namespace Content.Server.Database
                 .Where(p => p.Preference.UserId == userId.UserId)
                 .Include(p => p.Jobs)
                 .Include(p => p.Antags)
+                .Include(p => p.antagOptOut)
                 .Include(p => p.Traits)
                 .Include(p => p.Loadouts)
                     .ThenInclude(l => l.Groups)
@@ -188,6 +191,7 @@ namespace Content.Server.Database
         {
             var jobs = profile.Jobs.ToDictionary(j => new ProtoId<JobPrototype>(j.JobName), j => (JobPriority) j.Priority);
             var antags = profile.Antags.Select(a => new ProtoId<AntagPrototype>(a.AntagName));
+            var antagOptOut = profile.antagOptOut.Select(o => new ProtoId<AntagOptOutPrototype>(o.antagOptOutName));
             var traits = profile.Traits.Select(t => new ProtoId<TraitPrototype>(t.TraitName));
 
             var sex = Sex.Male;
@@ -260,6 +264,7 @@ namespace Content.Server.Database
                 jobs,
                 (PreferenceUnavailableMode) profile.PreferenceUnavailable,
                 antags.ToHashSet(),
+                antagOptOut.ToHashSet(),
                 traits.ToHashSet(),
                 loadouts
             );
@@ -304,6 +309,12 @@ namespace Content.Server.Database
             profile.Antags.AddRange(
                 humanoid.AntagPreferences
                     .Select(a => new Antag {AntagName = a})
+            );
+
+            profile.antagOptOut.Clear();
+            profile.antagOptOut.AddRange(
+                humanoid.AntagOptOutPreferences
+                    .Select(o => new antagOptOut {antagOptOutName = o})
             );
 
             profile.Traits.Clear();

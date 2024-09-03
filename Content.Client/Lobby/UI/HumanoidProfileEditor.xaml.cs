@@ -32,6 +32,7 @@ using Robust.Shared.ContentPack;
 using Robust.Shared.Enums;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Grimbly.Roles;
 using Direction = Robust.Shared.Maths.Direction;
 
 namespace Content.Client.Lobby.UI
@@ -395,6 +396,7 @@ namespace Content.Client.Lobby.UI
 
             RefreshAntags();
             RefreshJobs();
+            RefreshAntagOptOut();
 
             #endregion Jobs
 
@@ -680,6 +682,68 @@ namespace Content.Client.Lobby.UI
             }
         }
 
+        public void RefreshAntagOptOut()
+        {
+            antagOptOutList.DisposeAllChildren();
+            var items = new[]
+            {
+                ("humanoid-profile-editor-antag-preference-yes-button", 0),
+                ("humanoid-profile-editor-antag-preference-no-button", 1)
+            };
+
+            foreach (var antagOptOut in _prototypeManager.EnumeratePrototypes<AntagOptOutPrototype>().OrderBy(a => Loc.GetString(a.Name)))
+            {
+                if (!antagOptOut.SetPreference)
+                    continue;
+
+                var antagOptOutContainer = new BoxContainer()
+                {
+                    Orientation = LayoutOrientation.Horizontal,
+                };
+
+                var selector = new RequirementsSelector()
+                {
+                    Margin = new Thickness(3f, 3f, 3f, 0f),
+                };
+                selector.OnOpenGuidebook += OnOpenGuidebook;
+
+                var title = Loc.GetString(antagOptOut.Name);
+                var description = Loc.GetString(antagOptOut.Objective);
+                selector.Setup(items, title, 250, description, guides: antagOptOut.Guides);
+                selector.Select(Profile?.AntagOptOutPreferences.Contains(antagOptOut.ID) == true ? 0 : 1);
+
+                var requirements = _entManager.System<SharedRoleSystem>().GetAntagOptOutRequirement(antagOptOut);
+                if (!_requirements.CheckRoleRequirements(requirements, (HumanoidCharacterProfile?)_preferencesManager.Preferences?.SelectedCharacter, out var reason))
+                {
+                    selector.LockRequirements(reason);
+                    Profile = Profile?.WithAntagOptOutPreference(antagOptOut.ID, false);
+                    SetDirty();
+                }
+                else
+                {
+                    selector.UnlockRequirements();
+                }
+
+                selector.OnSelected += preference =>
+                {
+                    Profile = Profile?.WithAntagOptOutPreference(antagOptOut.ID, preference == 0);
+                    SetDirty();
+                };
+
+                antagOptOutContainer.AddChild(selector);
+
+                antagOptOutContainer.AddChild(new Button()
+                {
+                    Disabled = true,
+                    Text = Loc.GetString("loadout-window"),
+                    HorizontalAlignment = HAlignment.Right,
+                    Margin = new Thickness(3f, 0f, 0f, 0f),
+                });
+
+                antagOptOutList.AddChild(antagOptOutContainer);
+            }
+        }
+
         private void SetDirty()
         {
             // If it equals default then reset the button.
@@ -755,6 +819,7 @@ namespace Content.Client.Lobby.UI
             UpdateCMarkingsFacialHair();
 
             RefreshAntags();
+            RefreshAntagOptOut();
             RefreshJobs();
             RefreshLoadouts();
             RefreshSpecies();

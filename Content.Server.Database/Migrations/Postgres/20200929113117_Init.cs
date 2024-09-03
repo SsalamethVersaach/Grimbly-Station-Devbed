@@ -163,6 +163,26 @@ namespace Content.Server.Database.Migrations.Postgres
                         onDelete: ReferentialAction.Cascade);
                 });
 
+                migrationBuilder.CreateTable(
+                name: "antagOptOut",
+                columns: table => new
+                {
+                    antag_opt_out_id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    profile_id = table.Column<int>(nullable: false),
+                    antag_opt_out_name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_antagOptOut", x => x.antag_opt_out_id);
+                    table.ForeignKey(
+                        name: "FK_antag_opt_out_profile_profile_id",
+                        column: x => x.profile_id,
+                        principalTable: "profile",
+                        principalColumn: "profile_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateTable(
                 name: "job",
                 columns: table => new
@@ -265,6 +285,9 @@ namespace Content.Server.Database.Migrations.Postgres
 
             migrationBuilder.DropTable(
                 name: "job");
+
+            migrationBuilder.DropTable(
+                name: "antagOptOut");
 
             migrationBuilder.DropTable(
                 name: "player");

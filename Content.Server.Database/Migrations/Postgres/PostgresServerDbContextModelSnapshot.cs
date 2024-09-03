@@ -482,6 +482,33 @@ namespace Content.Server.Database.Migrations.Postgres
                     b.ToTable("antag", (string)null);
                 });
 
+            modelBuilder.Entity("Content.Server.Database.AntagOptOut", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("antag_opt_out_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AntagOptOutName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("antag_opt_out_name");
+
+                    b.Property<int>("ProfileId")
+                        .HasColumnType("integer")
+                        .HasColumnName("profile_id");
+
+                    b.HasKey("Id")
+                        .HasName("PK_antag_opt_out");
+
+                    b.HasIndex("ProfileId", "AntagOptOutName")
+                        .IsUnique();
+
+                    b.ToTable("antagOptOut", (string)null);
+                });
+
             modelBuilder.Entity("Content.Server.Database.AssignedUserId", b =>
                 {
                     b.Property<int>("Id")

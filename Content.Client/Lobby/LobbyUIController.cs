@@ -24,6 +24,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
+using Content.Shared.Grimbly.Roles;
 
 namespace Content.Client.Lobby;
 
@@ -93,6 +94,7 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
         if (_profileEditor != null)
         {
             _profileEditor.RefreshAntags();
+            _profileEditor.RefreshAntagOptOut();
             _profileEditor.RefreshJobs();
         }
     }
@@ -104,6 +106,11 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
             if (obj.WasModified<AntagPrototype>())
             {
                 _profileEditor.RefreshAntags();
+            }
+
+            if (obj.WasModified<AntagOptOutPrototype>())
+            {
+                _profileEditor.RefreshAntagOptOut();
             }
 
             if (obj.WasModified<JobPrototype>() ||
@@ -196,6 +203,7 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
     private void RefreshProfileEditor()
     {
         _profileEditor?.RefreshAntags();
+        _profileEditor?.RefreshAntagOptOut();
         _profileEditor?.RefreshJobs();
         _profileEditor?.RefreshLoadouts();
     }

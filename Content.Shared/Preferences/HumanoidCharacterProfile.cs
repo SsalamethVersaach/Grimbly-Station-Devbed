@@ -15,6 +15,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
+using Content.Shared.Grimbly.Roles;
 
 namespace Content.Shared.Preferences
 {
@@ -56,6 +57,12 @@ namespace Content.Shared.Preferences
         /// </summary>
         [DataField]
         private HashSet<ProtoId<AntagPrototype>> _antagPreferences = new();
+
+        /// <summary>
+        /// Antag opt out we have opted in to.
+        /// </summary>
+        [DataField]
+        private HashSet<ProtoId<AntagOptOutPrototype>> _antagOptOutPreferences = new();
 
         /// <summary>
         /// Enabled traits.
@@ -122,6 +129,11 @@ namespace Content.Shared.Preferences
         /// </summary>
         public IReadOnlySet<ProtoId<AntagPrototype>> AntagPreferences => _antagPreferences;
 
+         /// <summary>
+        /// <see cref="_antagOptOutPreferences"/>
+        /// </summary>
+        public IReadOnlySet<ProtoId<AntagOptOutPrototype>> AntagOptOutPreferences => _antagOptOutPreferences;
+
         /// <summary>
         /// <see cref="_traitPreferences"/>
         /// </summary>
@@ -146,6 +158,7 @@ namespace Content.Shared.Preferences
             Dictionary<ProtoId<JobPrototype>, JobPriority> jobPriorities,
             PreferenceUnavailableMode preferenceUnavailable,
             HashSet<ProtoId<AntagPrototype>> antagPreferences,
+            HashSet<ProtoId<AntagOptOutPrototype>> antagOptOutPreferences,
             HashSet<ProtoId<TraitPrototype>> traitPreferences,
             Dictionary<string, RoleLoadout> loadouts)
         {
@@ -160,6 +173,7 @@ namespace Content.Shared.Preferences
             _jobPriorities = jobPriorities;
             PreferenceUnavailable = preferenceUnavailable;
             _antagPreferences = antagPreferences;
+            _antagOptOutPreferences = antagOptOutPreferences;
             _traitPreferences = traitPreferences;
             _loadouts = loadouts;
 
@@ -191,6 +205,7 @@ namespace Content.Shared.Preferences
                 new Dictionary<ProtoId<JobPrototype>, JobPriority>(other.JobPriorities),
                 other.PreferenceUnavailable,
                 new HashSet<ProtoId<AntagPrototype>>(other.AntagPreferences),
+                new HashSet<ProtoId<AntagOptOutPrototype>>(other.AntagOptOutPreferences),
                 new HashSet<ProtoId<TraitPrototype>>(other.TraitPreferences),
                 new Dictionary<string, RoleLoadout>(other.Loadouts))
         {
@@ -396,6 +411,32 @@ namespace Content.Shared.Preferences
             };
         }
 
+        public HumanoidCharacterProfile WithAntagOptOutPreferences(IEnumerable<ProtoId<AntagOptOutPrototype>> AntagOptOutPreferences)
+        {
+            return new(this)
+            {
+                _antagOptOutPreferences = new (AntagOptOutPreferences),
+            };
+        }
+
+        public HumanoidCharacterProfile WithAntagOptOutPreference(ProtoId<AntagOptOutPrototype> antagOptOutId, bool pref)
+        {
+            var list = new HashSet<ProtoId<AntagOptOutPrototype>>(_antagOptOutPreferences);
+            if (pref)
+            {
+                list.Add(antagOptOutId);
+            }
+            else
+            {
+                list.Remove(antagOptOutId);
+            }
+
+            return new(this)
+            {
+                _antagOptOutPreferences = list,
+            };
+        }
+
         public HumanoidCharacterProfile WithTraitPreference(ProtoId<TraitPrototype> traitId, IPrototypeManager protoManager)
         {
             // null category is assumed to be default.
@@ -475,6 +516,7 @@ namespace Content.Shared.Preferences
             if (SpawnPriority != other.SpawnPriority) return false;
             if (!_jobPriorities.SequenceEqual(other._jobPriorities)) return false;
             if (!_antagPreferences.SequenceEqual(other._antagPreferences)) return false;
+            if (!_antagOptOutPreferences.SequenceEqual(other._antagOptOutPreferences)) return false;
             if (!_traitPreferences.SequenceEqual(other._traitPreferences)) return false;
             if (!Loadouts.SequenceEqual(other.Loadouts)) return false;
             if (FlavorText != other.FlavorText) return false;
@@ -599,6 +641,10 @@ namespace Content.Shared.Preferences
                 .Where(id => prototypeManager.TryIndex(id, out var antag) && antag.SetPreference)
                 .ToList();
 
+             var antagOptOut = AntagOptOutPreferences
+                .Where(id => prototypeManager.TryIndex(id, out var antagOptOut) && antagOptOut.SetPreference)
+                .ToList();
+
             var traits = TraitPreferences
                          .Where(prototypeManager.HasIndex)
                          .ToList();
@@ -622,6 +668,9 @@ namespace Content.Shared.Preferences
 
             _antagPreferences.Clear();
             _antagPreferences.UnionWith(antags);
+
+            _antagOptOutPreferences.Clear();
+            _antagOptOutPreferences.UnionWith(antagOptOut);
 
             _traitPreferences.Clear();
             _traitPreferences.UnionWith(GetValidTraits(traits, prototypeManager));
@@ -710,6 +759,7 @@ namespace Content.Shared.Preferences
             var hashCode = new HashCode();
             hashCode.Add(_jobPriorities);
             hashCode.Add(_antagPreferences);
+            hashCode.Add(_antagOptOutPreferences);
             hashCode.Add(_traitPreferences);
             hashCode.Add(_loadouts);
             hashCode.Add(Name);
