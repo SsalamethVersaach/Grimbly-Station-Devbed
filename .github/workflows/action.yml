@@ -1,0 +1,3 @@
+- name: Get All Changed Files
+uses: jitterbit/get-changed-files@v1
+            
