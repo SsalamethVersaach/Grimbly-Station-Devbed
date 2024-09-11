@@ -1,17 +1,16 @@
+# shuttles from the shipyard will try to dock here
+- type: entity
+  parent: AirlockGlassShuttle
+  id: AirlockExternalGlassShuttleShipyard
+  suffix: External, Shipyard, Glass, Docking
+  components:
+  - type: PriorityDock
+    tag: DockShipyard
+
 # Delta V specific roles
 - type: entity
   parent: AirlockScience
   id: AirlockMantisLocked
-  suffix: Mantis, Locked
-  components:
-  - type: ContainerFill
-    containers:
-      board: [ DoorElectronicsMantis ]
-
-
-- type: entity
-  parent: AirlockScienceGlass
-  id: AirlockMantisGlassLocked
   suffix: Mantis, Locked
   components:
   - type: ContainerFill
@@ -30,7 +29,7 @@
 - type: entity
   parent: AirlockCommandGlass
   id: AirlockChiefJusticeGlassLocked
-  suffix: ChiefJustice, Locked
+  suffix: Chief Justice, Locked
   components:
   - type: ContainerFill
     containers:
@@ -72,6 +71,24 @@
     containers:
       board: [ DoorElectronicsProsecutor ]
 
+- type: entity
+  parent: AirlockJustice
+  id: AirlockClerkLocked
+  suffix: Clerk, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsClerk ]
+
+- type: entity
+  parent: AirlockJusticeGlass
+  id: AirlockClerkGlassLocked
+  suffix: Clerk, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsClerk ]
+
 # Maintenance
 - type: entity
   parent: AirlockMaint
@@ -101,6 +118,15 @@
       board: [ DoorElectronicsProsecutor ]
 
 - type: entity
+  parent: AirlockMaint
+  id: AirlockMaintClerkLocked
+  suffix: Clerk, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsClerk ]
+
+- type: entity
   parent: AirlockSecurity
   id: AirlockCorpsmanLocked
   suffix: Corpsman, Locked
@@ -108,15 +134,17 @@
   - type: ContainerFill
     containers:
       board: [ DoorElectronicsCorpsman ]
+  - type: Wires
+    layoutId: AirlockCommand
 
 - type: entity
-  parent: AirlockSecurityGlass
-  id: AirlockCorpsmanGlassLocked
-  suffix: Corpsman, Locked
+  parent: AirlockMedical
+  id: AirlockParamedicLocked
+  suffix: Paramedic, Locked
   components:
   - type: ContainerFill
     containers:
-      board: [ DoorElectronicsCorpsman ]
+      board: [ DoorElectronicsParamedic ]
 
 - type: entity
   parent: AirlockGlassShuttle
@@ -126,8 +154,9 @@
     - type: GridFill
       path: /Maps/Shuttles/DeltaV/sub_escape_pod.yml
 
+#Add airlocks from upstream roles
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockBoxerLocked
   suffix: Boxer, Locked
   components:
@@ -136,7 +165,7 @@
       board: [ DoorElectronicsBoxer ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockClownLocked
   suffix: Clown, Locked
   components:
@@ -145,7 +174,7 @@
       board: [ DoorElectronicsClown ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockMimeLocked
   suffix: Mime, Locked
   components:
@@ -154,7 +183,7 @@
       board: [ DoorElectronicsMime ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockMusicianLocked
   suffix: Musician, Locked
   components:
@@ -163,7 +192,7 @@
       board: [ DoorElectronicsMusician ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockReporterLocked
   suffix: Reporter, Locked
   components:
@@ -172,7 +201,7 @@
       board: [ DoorElectronicsReporter ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockLibraryLocked
   suffix: Library, Locked
   components:
@@ -181,7 +210,7 @@
       board: [ DoorElectronicsLibrary ]
 
 - type: entity
-  parent: Airlock
+  parent: AirlockServiceLocked
   id: AirlockZookeeperLocked
   suffix: Zookeeper, Locked
   components:
@@ -197,6 +226,8 @@
   - type: ContainerFill
     containers:
       board: [ DoorElectronicsSalvage ]
+  - type: Wires
+    layoutId: AirlockCargo
 
 - type: entity
   parent: AirlockMedical
@@ -207,9 +238,47 @@
     containers:
       board: [ DoorElectronicsPsychologist ]
 
+- type: entity
+  parent: AirlockFreezer
+  id: AirlockFreezerServiceLocked
+  suffix: Service, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsService ]
+
 # Glass Airlocks
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockScienceGlass
+  id: AirlockMantisGlassLocked
+  suffix: Mantis, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMantis ]
+
+- type: entity
+  parent: AirlockSecurityGlass
+  id: AirlockCorpsmanGlassLocked
+  suffix: Corpsman, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsCorpsman ]
+  - type: Wires
+    layoutId: AirlockCommand
+
+- type: entity
+  parent: AirlockMedicalGlass
+  id: AirlockParamedicGlassLocked
+  suffix: Paramedic, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsParamedic ]
+
+- type: entity
+  parent: AirlockServiceGlassLocked
   id: AirlockBoxerGlassLocked
   suffix: Boxer, Locked
   components:
@@ -218,7 +287,7 @@
       board: [ DoorElectronicsBoxer ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockClownGlassLocked
   suffix: Clown, Locked
   components:
@@ -227,7 +296,7 @@
       board: [ DoorElectronicsClown ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockMimeGlassLocked
   suffix: Mime, Locked
   components:
@@ -236,7 +305,7 @@
       board: [ DoorElectronicsMime ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockMusicianGlassLocked
   suffix: Musician, Locked
   components:
@@ -245,7 +314,7 @@
       board: [ DoorElectronicsMusician ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockReporterGlassLocked
   suffix: Reporter, Locked
   components:
@@ -254,7 +323,7 @@
       board: [ DoorElectronicsReporter ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockLibraryGlassLocked
   suffix: Library, Locked
   components:
@@ -263,7 +332,7 @@
       board: [ DoorElectronicsLibrary ]
 
 - type: entity
-  parent: AirlockGlass
+  parent: AirlockServiceGlassLocked
   id: AirlockZookeeperGlassLocked
   suffix: Zookeeper, Locked
   components:
@@ -279,6 +348,8 @@
   - type: ContainerFill
     containers:
       board: [ DoorElectronicsSalvage ]
+  - type: Wires
+    layoutId: AirlockCargo
 
 - type: entity
   parent: AirlockMedicalGlass
@@ -291,7 +362,36 @@
 
 # Maintenance Hatches
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintRnDLocked
+  id: AirlockMaintMantisLocked
+  suffix: Mantis, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsMantis ]
+
+- type: entity
+  parent: AirlockMaintSecLocked
+  id: AirlockMaintCorpsmanLocked
+  suffix: Corpsman, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsCorpsman ]
+  - type: Wires
+    layoutId: AirlockCommand
+
+- type: entity
+  parent: AirlockMaintMedLocked
+  id: AirlockMaintParamedicLocked
+  suffix: Paramedic, Locked
+  components:
+  - type: ContainerFill
+    containers:
+      board: [ DoorElectronicsParamedic ]
+
+- type: entity
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintBoxerLocked
   suffix: Boxer, Locked
   components:
@@ -300,7 +400,7 @@
       board: [ DoorElectronicsBoxer ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintClownLocked
   suffix: Clown, Locked
   components:
@@ -309,7 +409,7 @@
       board: [ DoorElectronicsClown ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintMimeLocked
   suffix: Mime, Locked
   components:
@@ -318,7 +418,7 @@
       board: [ DoorElectronicsMime ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintMusicianLocked
   suffix: Musician, Locked
   components:
@@ -327,7 +427,7 @@
       board: [ DoorElectronicsMusician ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintReporterLocked
   suffix: Reporter, Locked
   components:
@@ -336,7 +436,7 @@
       board: [ DoorElectronicsReporter ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintLibraryLocked
   suffix: Library, Locked
   components:
@@ -345,7 +445,7 @@
       board: [ DoorElectronicsLibrary ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintServiceLocked
   id: AirlockMaintZookeeperLocked
   suffix: Zookeeper, Locked
   components:
@@ -354,7 +454,7 @@
       board: [ DoorElectronicsZookeeper ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintMedLocked
   id: AirlockMaintPsychologistLocked
   suffix: Psychologist, Locked
   components:
@@ -363,7 +463,7 @@
       board: [ DoorElectronicsPsychologist ]
 
 - type: entity
-  parent: AirlockMaint
+  parent: AirlockMaintSecLocked
   id: AirlockMaintSecurityLawyerLocked
   suffix: Security/Lawyer, Locked
   components:
